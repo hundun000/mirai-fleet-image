@@ -1,0 +1,2 @@
+rootProject.name = 'mirai-fleet-image'
+include 'plugin', 'share'

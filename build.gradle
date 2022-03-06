@@ -1,0 +1,137 @@
+buildscript {
+    ext {
+        skikoVer = "0.7.12"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10' 
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
+    id 'net.mamoe.mirai-console' version "${MIRAI_VERSION}"
+}
+
+allprojects {
+    repositories {
+        //removeIf { it is MavenArtifactRepository && it.url.host == "dl.bintray.com" }
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+subprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+    apply plugin: 'net.mamoe.mirai-console'
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    version = '0.0.1-SNAPSHOT'
+	ext {
+        appName = "mirai-fleet-image"
+	}
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+    test {
+        useJUnitPlatform()
+    }
+
+}
+
+
+project(":plugin") {
+    sourceSets.main.java.srcDirs = [ "src/main/java" , "src/main/resources"]
+    
+    sourceSets.test.java.srcDirs = [ "src/test/java" ]
+    
+    eclipse.project.name = appName + "-plugin"
+
+    dependencies {
+        implementation project(":share")
+    }
+}
+
+project(":share") {
+    apply plugin: "maven"
+    apply plugin: "maven-publish"
+    apply plugin: 'java-library'
+    
+    sourceSets.main.java.srcDirs = [ "src/main/java", "src/main/resources"]
+    sourceSets.main.kotlin.srcDirs = [ "src/main/kotlin", "src/main/resources"]
+    eclipse.project.name = appName + "-share"
+    
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+    
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+    
+    
+
+    dependencies {
+
+        api 'com.github.hundun000:mirai-fleet-framework:70029191ce'
+        implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVer")
+        implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVer")
+        implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
+        implementation 'com.github.hundun000:SkikoMirai:571c4de283'
+    
+        // for musicPlugin
+        implementation 'com.google.code.gson:gson:2.8.6'
+        
+        compileOnly 'org.projectlombok:lombok:1.18.4'
+        annotationProcessor 'org.projectlombok:lombok:1.18.4'
+        
+        testCompile "junit:junit:4.11"
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
