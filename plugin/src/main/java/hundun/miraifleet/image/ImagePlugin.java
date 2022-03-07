@@ -18,7 +18,7 @@ public class ImagePlugin extends JavaPlugin {
     
     public ImagePlugin() {
         super(new JvmPluginDescriptionBuilder(
-                "hundun.fleet.music",
+                "hundun.fleet.image",
                 "0.1.0"
             )
             .dependsOn("org.laolittle.plugin.SkikoMirai", ">=1.0.2", true)

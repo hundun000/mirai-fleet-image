@@ -12,7 +12,7 @@ import hundun.miraifleet.image.ImagePlugin;
  * @author hundun
  * Created on 2021/06/03
  */
-public class MusicPluginTest {
+public class ImagePluginTest {
     public static void main(String[] args) throws InterruptedException {
         MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(new MiraiConsoleImplementationTerminal());
         

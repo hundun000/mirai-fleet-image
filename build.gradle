@@ -66,6 +66,7 @@ project(":plugin") {
 
     dependencies {
         implementation project(":share")
+        testCompile 'com.github.hundun000:SkikoMirai:571c4de283'
     }
 }
 
@@ -97,14 +98,11 @@ project(":share") {
 
     dependencies {
 
-        api 'com.github.hundun000:mirai-fleet-framework:70029191ce'
+        api 'com.github.hundun000:mirai-fleet-framework:d045f38d1d'
         implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVer")
         implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVer")
         implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
-        implementation 'com.github.hundun000:SkikoMirai:571c4de283'
-    
-        // for musicPlugin
-        implementation 'com.google.code.gson:gson:2.8.6'
+        compileOnly 'com.github.hundun000:SkikoMirai:571c4de283'
         
         compileOnly 'org.projectlombok:lombok:1.18.4'
         annotationProcessor 'org.projectlombok:lombok:1.18.4'

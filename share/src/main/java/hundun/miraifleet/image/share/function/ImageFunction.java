@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
 import hundun.miraifleet.framework.core.function.BaseFunction;
 import hundun.miraifleet.framework.core.function.BaseFunction.AbstractCompositeCommandFunctionComponent;
+import hundun.miraifleet.framework.core.function.FunctionReplyReceiver;
 import lombok.Getter;
 import net.mamoe.mirai.console.command.AbstractCommand;
 import net.mamoe.mirai.console.command.Command;
@@ -14,6 +15,8 @@ import net.mamoe.mirai.console.command.CommandManager;
 import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.permission.PermissionService;
 import net.mamoe.mirai.console.plugin.jvm.JvmPlugin;
+import net.mamoe.mirai.message.data.Image;
+import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.utils.ExternalResource;
 
 
@@ -57,8 +60,13 @@ public class ImageFunction extends BaseFunction<Void>{
                 return;
             }
             
-            ExternalResource image = imageCoreKt.ph(leftText, rightText);
-            
+            ExternalResource externalResource = imageCoreKt.ph(leftText, rightText);
+            FunctionReplyReceiver receiver = new FunctionReplyReceiver(sender, log);
+            Message image = receiver.uploadImageOrNotSupportPlaceholder(externalResource);
+            if (image instanceof Image) {
+                log.info("has real image: " + ((Image) image).getMd5());
+            }
+            receiver.sendMessage(image);
         }
     }
 
