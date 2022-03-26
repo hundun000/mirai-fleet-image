@@ -165,16 +165,7 @@ class ImageCoreKt {
         Surface.makeRasterN32Premul(skikoImage.width, h + (foo * 1.4f).toInt()).apply {
             canvas.apply {
                 clear(Color.BLACK)
-                drawImage(skikoImage, 0F, 0F, paint.apply {
-                    colorFilter = ColorFilter.makeMatrix(
-                        ColorMatrix(
-                            0.33F, 0.38F, 0.29F, 0F, 0F,
-                            0.33F, 0.38F, 0.29F, 0F, 0F,
-                            0.33F, 0.38F, 0.29F, 0F, 0F,
-                            0.33F, 0.38F, 0.29F, 1F, 0F,
-                        )
-                    )
-                })
+                drawImage(skikoImage, 0F, 0F)
 
                 drawTextLine(text,
                     ((width - text.width) / 2),

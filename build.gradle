@@ -34,7 +34,7 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
 
-    version = '0.3.1-SNAPSHOT'
+    version = '0.3.2-SNAPSHOT'
 	ext {
         appName = "mirai-fleet-image"
 	}
