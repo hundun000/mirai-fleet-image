@@ -1,12 +1,10 @@
-package hundun.miraifleet.music;
+package hundun.miraifleet.image;
 
 
 import net.mamoe.mirai.console.plugin.PluginManager;
 import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;
 import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader;
 import org.laolittle.plugin.SkikoMirai;
-
-import hundun.miraifleet.image.ImagePlugin;
 
 /**
  * @author hundun

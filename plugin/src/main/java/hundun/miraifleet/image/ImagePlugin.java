@@ -2,7 +2,7 @@ package hundun.miraifleet.image;
 
 import org.jetbrains.annotations.NotNull;
 
-import hundun.miraifleet.image.botlogic.MusicBotLogic;
+import hundun.miraifleet.image.botlogic.ImageBotLogic;
 import net.mamoe.mirai.console.extension.PluginComponentStorage;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
@@ -14,7 +14,7 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 public class ImagePlugin extends JavaPlugin {
     public static final ImagePlugin INSTANCE = new ImagePlugin(); 
     
-    MusicBotLogic botLogic;
+    ImageBotLogic botLogic;
     
     public ImagePlugin() {
         super(new JvmPluginDescriptionBuilder(
@@ -32,7 +32,7 @@ public class ImagePlugin extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        botLogic = new MusicBotLogic(this);
+        botLogic = new ImageBotLogic(this);
         botLogic.onBotLogicEnable();
     }
     
