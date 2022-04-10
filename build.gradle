@@ -15,6 +15,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10' 
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
     id 'net.mamoe.mirai-console' version "${MIRAI_VERSION}"
+    id("me.him188.kotlin-jvm-blocking-bridge") version "2.0.0-160.3"
 }
 
 allprojects {
@@ -75,7 +76,8 @@ project(":plugin") {
 project(":share") {
     apply plugin: "maven"
     apply plugin: 'java-library'
-    
+    apply plugin: "me.him188.kotlin-jvm-blocking-bridge"
+
     sourceSets.main.java.srcDirs = [ "src/main/java", "src/main/resources"]
     sourceSets.main.kotlin.srcDirs = [ "src/main/kotlin", "src/main/resources"]
     eclipse.project.name = appName + "-share"

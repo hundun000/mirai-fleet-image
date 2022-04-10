@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.*
+import me.him188.kotlin.jvm.blocking.bridge.JvmBlockingBridge
 import net.mamoe.mirai.console.plugin.description.PluginDependency
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
@@ -99,19 +100,21 @@ class ImageCoreKt {
         }
     }
 
-    public fun bw(content:String, image:MiraiImage):ExternalResource{
+    @JvmName("bw")
+    fun jbw(content:String, image:MiraiImage): ExternalResource = runBlocking { bw(content, image) }
+
+    public suspend fun bw(content:String, image:MiraiImage): ExternalResource {
 
         val paint = Paint().apply {
             isAntiAlias = true
         }
 
-        val skikoImage = runBlocking {
-            HttpClient(OkHttp).use { client ->
-                client.get<InputStream>(image.queryUrl()).use { input ->
-                    Image.makeFromEncoded(input.readBytes())
-                }
+        val skikoImage = HttpClient(OkHttp).use { client ->
+            client.get<InputStream>(image.queryUrl()).use { input ->
+                Image.makeFromEncoded(input.readBytes())
             }
         }
+
 
         val h = skikoImage.height
         val w = skikoImage.width
