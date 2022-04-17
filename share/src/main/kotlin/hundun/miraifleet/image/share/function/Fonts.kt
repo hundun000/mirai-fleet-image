@@ -1,4 +1,4 @@
-package hundun.miraifleet.image.share.function
+package hundun.miraifleet.image.share.function.hundun.miraifleet.image.share.function
 
 import org.laolittle.plugin.Fonts
 

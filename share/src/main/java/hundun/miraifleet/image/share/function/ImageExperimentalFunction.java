@@ -1,17 +1,20 @@
 package hundun.miraifleet.image.share.function;
 
+import java.io.*;
 import java.util.TimerTask;
+import java.util.function.Function;
 
 import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
 import hundun.miraifleet.framework.core.function.AsListenerHost;
 import hundun.miraifleet.framework.core.function.BaseFunction;
 import hundun.miraifleet.framework.core.function.FunctionReplyReceiver;
+import hundun.miraifleet.image.share.function.hundun.miraifleet.image.share.function.ImageCoreKt;
 import lombok.Data;
 import lombok.Getter;
 import net.mamoe.mirai.console.command.AbstractCommand;
 import net.mamoe.mirai.console.command.CommandSender;
-import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPlugin;
+import net.mamoe.mirai.contact.User;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.Image;
@@ -20,14 +23,14 @@ import net.mamoe.mirai.utils.ExternalResource;
 import org.jetbrains.annotations.NotNull;
 
 @AsListenerHost
-public class ImageDemoFunction extends BaseFunction<ImageDemoFunction.SessionData>{
+public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFunction.SessionData>{
 
     @Getter
     private final CompositeCommandFunctionComponent commandComponent;
     private final int BW_TIMEOUT_SECOND = 30;
-    ImageCoreKt imageCoreKt = new ImageCoreKt();
+    private ImageCoreKt imageCoreKt = ImageCoreKt.INSTANCE;
 
-    private static enum ImageFunctionState {
+    private enum ImageFunctionState {
         INIT,
         WAIT_BW_IMAGE,
         WAIT_XXX_IMAGE,
@@ -39,22 +42,19 @@ public class ImageDemoFunction extends BaseFunction<ImageDemoFunction.SessionDat
     }
 
 
-    // FIXME
-    JavaPlugin plugin;
-    public ImageDemoFunction(
+    public ImageExperimentalFunction(
             BaseBotLogic baseBotLogic,
-            JavaPlugin plugin,
+            JvmPlugin plugin,
             String characterName
             ) {
         super(
             baseBotLogic,
             plugin,
             characterName,
-            "ImageFunction",
+            "ImageExperimentalFunction",
             () -> new SessionData()
             );
         this.commandComponent = new CompositeCommandFunctionComponent(plugin, characterName, functionName);
-        this.plugin = plugin;
     }
 
     @EventHandler
@@ -98,21 +98,6 @@ public class ImageDemoFunction extends BaseFunction<ImageDemoFunction.SessionDat
         public CompositeCommandFunctionComponent(JvmPlugin plugin, String characterName, String functionName) {
             super(plugin, characterName, functionName, functionName);
         }
-        
-        @SubCommand("ph")
-        public void ph(CommandSender sender, String leftText, String rightText) {
-            if (!checkCosPermission(sender)) {
-                return;
-            }
-            sender.getCoroutineContext();
-            ExternalResource externalResource = imageCoreKt.ph(leftText, rightText);
-            FunctionReplyReceiver receiver = new FunctionReplyReceiver(sender, log);
-            Message image = receiver.uploadImageOrNotSupportPlaceholder(externalResource);
-            if (image instanceof Image) {
-                log.info("has real image: " + ((Image) image).getMd5());
-            }
-            receiver.sendMessage(image);
-        }
 
         @SubCommand("bw")
         public void bw(CommandSender sender, String drawText) {
@@ -125,7 +110,7 @@ public class ImageDemoFunction extends BaseFunction<ImageDemoFunction.SessionDat
                 sessionData.setState(ImageFunctionState.WAIT_BW_IMAGE);
                 sessionData.setDrawText(drawText);
                 receiver.sendMessage("进入等待bw图片状态，请在" + BW_TIMEOUT_SECOND + "秒内发送图片");
-                plugin.getScheduler().delayed(BW_TIMEOUT_SECOND * 1000, new TimeoutTask(receiver, sessionData));
+                botLogic.getPluginScheduler().delayed(BW_TIMEOUT_SECOND * 1000, new TimeoutTask(receiver, sessionData));
             } else {
                 receiver.sendMessage("当前已在等待bw图片状态，请先完成当前任务");
             }
