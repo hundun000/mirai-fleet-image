@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        skikoVer = "0.7.18"
-        SkikoMiraiVer = "1.0.6"
+        //skikoVer = "0.7.18"
+        SkikoMiraiVer = "1.0.8"
     }
     repositories {
         mavenCentral()
@@ -113,9 +113,9 @@ project(":share") {
         api 'com.github.hundun000.mirai-fleet-framework:framework-core:0.5.1'
         implementation 'com.github.hundun000.mirai-fleet-framework:framework-starter:0.5.1'
 
-        implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVer")
-        implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVer")
-        implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
+        //implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVer")
+        //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVer")
+        //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
         compileOnly("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
         
 

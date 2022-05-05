@@ -40,11 +40,11 @@ public class ImageStableFunction extends BaseFunction<Void>{
             String characterName
             ) {
         super(
-            baseBotLogic,
-            plugin,
-            characterName,
-            "ImageStableFunction",
-            null
+                baseBotLogic,
+                plugin,
+                characterName,
+                "ImageStableFunction",
+                null
             );
         this.commandComponent = new CompositeCommandFunctionComponent(plugin, characterName, functionName);
         this.cacheableFileHelper = new CacheableFileHelper(resolveFunctionCacheFileFolder());

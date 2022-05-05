@@ -48,11 +48,11 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
             String characterName
             ) {
         super(
-            baseBotLogic,
-            plugin,
-            characterName,
-            "ImageExperimentalFunction",
-            () -> new SessionData()
+                baseBotLogic,
+                plugin,
+                characterName,
+                "ImageExperimentalFunction",
+                () -> new SessionData()
             );
         this.commandComponent = new CompositeCommandFunctionComponent(plugin, characterName, functionName);
     }
