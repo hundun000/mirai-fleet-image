@@ -1,5 +1,6 @@
 package hundun.miraifleet.image.share.function;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.TimerTask;
 import java.util.function.Function;
@@ -8,7 +9,6 @@ import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
 import hundun.miraifleet.framework.core.function.AsListenerHost;
 import hundun.miraifleet.framework.core.function.BaseFunction;
 import hundun.miraifleet.framework.core.function.FunctionReplyReceiver;
-import hundun.miraifleet.image.share.function.hundun.miraifleet.image.share.function.ImageCoreKt;
 import lombok.Data;
 import lombok.Getter;
 import net.mamoe.mirai.console.command.AbstractCommand;
@@ -21,6 +21,7 @@ import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.utils.ExternalResource;
 import org.jetbrains.annotations.NotNull;
+import xmmt.dituon.share.ImageSynthesis;
 
 @AsListenerHost
 public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFunction.SessionData>{
@@ -28,7 +29,7 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
     @Getter
     private final CompositeCommandFunctionComponent commandComponent;
     private final int BW_TIMEOUT_SECOND = 30;
-    private ImageCoreKt imageCoreKt = ImageCoreKt.INSTANCE;
+    private SharedPetFunction petFunction;
 
     private enum ImageFunctionState {
         INIT,
@@ -39,6 +40,9 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
     public static class SessionData {
         ImageFunctionState state = ImageFunctionState.INIT;
         String drawText;
+        String petpetKey;
+        BufferedImage toAvatarImage;
+        BufferedImage fromAvatarImage;
     }
 
 
@@ -55,6 +59,10 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
                 () -> new SessionData()
             );
         this.commandComponent = new CompositeCommandFunctionComponent(plugin, characterName, functionName);
+    }
+
+    public void lazyInitSharedFunction(SharedPetFunction petFunction) {
+        this.petFunction = petFunction;
     }
 
     @EventHandler
@@ -75,9 +83,14 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
             // 在执行耗时操作前改变状态，防止被判为timeout
             sessionData.setState(ImageFunctionState.INIT);
             if (currentState == ImageFunctionState.WAIT_BW_IMAGE) {
-                var externalResource = imageCoreKt.bw(sessionData.getDrawText(), image);
-                Message outputMessage = receiver.uploadImageOrNotSupportPlaceholder(externalResource);
-                receiver.sendMessage(outputMessage);
+                var resultFile = petFunction.petService(sessionData.getFromAvatarImage(), sessionData.toAvatarImage, sessionData.getPetpetKey());
+                if (resultFile != null) {
+                    ExternalResource externalResource = ExternalResource.create(resultFile).toAutoCloseable();
+                    Message message = receiver.uploadImageOrNotSupportPlaceholder(externalResource);
+                    receiver.sendMessage(message);
+                } else {
+                    log.info("petService resultFile null");
+                }
             }
         } else {
             log.info("wait image but messageChain no image");
@@ -99,35 +112,43 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
             super(plugin, characterName, functionName, functionName);
         }
 
-        @SubCommand("bw")
-        public void bw(CommandSender sender, String drawText) {
+        @SubCommand("画图")
+        public void bw(CommandSender sender, User target, String petpetKey) {
             if (!checkCosPermission(sender)) {
                 return;
             }
-            var sessionData = getOrCreateSessionData(sender);
+            String sessionId = getSessionId(sender);
+            var sessionData = getOrCreateSessionData(sessionId);
             FunctionReplyReceiver receiver = new FunctionReplyReceiver(sender, plugin.getLogger());
             if (sessionData.getState() == ImageFunctionState.INIT) {
                 sessionData.setState(ImageFunctionState.WAIT_BW_IMAGE);
-                sessionData.setDrawText(drawText);
-                receiver.sendMessage("进入等待bw图片状态，请在" + BW_TIMEOUT_SECOND + "秒内发送图片");
-                botLogic.getPluginScheduler().delayed(BW_TIMEOUT_SECOND * 1000, new TimeoutTask(receiver, sessionData));
+                sessionData.setPetpetKey(petpetKey);
+                BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(sender.getUser().getAvatarUrl());
+                BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(target.getAvatarUrl());
+                sessionData.setFromAvatarImage(fromAvatarImage);
+                sessionData.setToAvatarImage(toAvatarImage);
+                receiver.sendMessage("进入等待petpet图片状态，请在" + BW_TIMEOUT_SECOND + "秒内发送图片");
+                botLogic.getPluginScheduler().delayed(BW_TIMEOUT_SECOND * 1000, new TimeoutTask(receiver, sessionId));
             } else {
-                receiver.sendMessage("当前已在等待bw图片状态，请先完成当前任务");
+                receiver.sendMessage("当前已在等待petpet图片状态，请先完成当前任务");
             }
         }
 
         private class TimeoutTask extends TimerTask {
             FunctionReplyReceiver receiver;
-            SessionData sessionData;
-            TimeoutTask(FunctionReplyReceiver receiver, SessionData sessionData) {
+            String sessionId;
+            TimeoutTask(FunctionReplyReceiver receiver, String sessionId) {
                 this.receiver = receiver;
-                this.sessionData = sessionData;
+                this.sessionId = sessionId;
             }
             @Override
             public void run() {
+                SessionData sessionData = getOrCreateSessionData(sessionId);
                 if (sessionData.state == ImageFunctionState.WAIT_BW_IMAGE) {
                     receiver.sendMessage("已超时，离开等待图片状态。");
-                    sessionData.setState(ImageFunctionState.INIT);
+                    removeSessionData(sessionId);
+                } else {
+                    plugin.getLogger().warning("id = " + sessionId + " state = " + sessionData.state + " but TimeoutTask arrival");
                 }
             }
         }

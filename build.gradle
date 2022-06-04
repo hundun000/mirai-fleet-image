@@ -1,7 +1,6 @@
 buildscript {
     ext {
-        //skikoVer = "0.7.18"
-        SkikoMiraiVer = "1.0.8"
+    
     }
     repositories {
         mavenCentral()
@@ -15,7 +14,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10' 
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
     id 'net.mamoe.mirai-console' version "${MIRAI_VERSION}"
-    id("me.him188.kotlin-jvm-blocking-bridge") version "2.0.0-160.3"
+    //id("me.him188.kotlin-jvm-blocking-bridge") version "2.0.0-160.3"
 }
 
 allprojects {
@@ -23,7 +22,7 @@ allprojects {
         //removeIf { it is MavenArtifactRepository && it.url.host == "dl.bintray.com" }
         mavenCentral()
         maven { url "https://maven.aliyun.com/repository/central"}
-        maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev"}
+        //maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev"}
         maven { url 'https://jitpack.io' }
     }
 }
@@ -36,10 +35,6 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
 
-    version = '0.3.2-SNAPSHOT'
-	ext {
-        appName = "mirai-fleet-image"
-	}
     java {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -54,15 +49,21 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
     }
-    test {
-        useJUnitPlatform()
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        // overwrite dependencies net.mamoe.mirai.console.plugin.jvm.JvmPlugin
+        duplicatesStrategy = 'include'
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    artifacts {
+        archives sourcesJar
     }
 
     dependencies {
         compileOnly 'org.projectlombok:lombok:1.18.4'
         annotationProcessor 'org.projectlombok:lombok:1.18.4'
 
-        testCompile "junit:junit:4.11"
+        testImplementation "junit:junit:4.11"
     }
 
 }
@@ -73,52 +74,46 @@ project(":plugin") {
     
     sourceSets.test.java.srcDirs = [ "src/test/java" ]
     
-    eclipse.project.name = appName + "-plugin"
+    eclipse.project.name = rootProject.name + "-plugin"
 
     dependencies {
         implementation project(":share")
-        compileOnly("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
-        testCompile("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
     }
 }
 
 project(":share") {
-    apply plugin: "maven"
+    apply plugin: "maven-publish"
     apply plugin: 'java-library'
-    apply plugin: "me.him188.kotlin-jvm-blocking-bridge"
+    //apply plugin: "me.him188.kotlin-jvm-blocking-bridge"
 
     sourceSets.main.java.srcDirs = [ "src/main/java", "src/main/resources"]
     sourceSets.main.kotlin.srcDirs = [ "src/main/kotlin", "src/main/resources"]
-    eclipse.project.name = appName + "-share"
-    
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-    
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-    
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
-    
-    
+    eclipse.project.name = rootProject.name + "-share"
+
 
     dependencies {
 
-        api 'com.github.hundun000.mirai-fleet-framework:framework-core:0.5.1'
-        implementation 'com.github.hundun000.mirai-fleet-framework:framework-starter:0.5.1'
+        api 'com.github.hundun000.mirai-fleet-framework:framework-core:0.5.4'
+        api 'com.github.hundun000.mirai-fleet-framework:framework-starter:0.5.4'
 
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVer")
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVer")
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
-        compileOnly("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
-        
+        //compileOnly("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
 
+        api 'com.github.Dituon:petpet:8b914aa487'
+    }
+    
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                // useless for jitpack: groupId = GROUP
+                artifactId = ARTIFACT_ID_START + "-share"
+                // useless for jitpack: version = VERSION
+    
+                from components.java
+            }
+        }
     }
 }
 

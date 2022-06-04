@@ -2,6 +2,7 @@ plugin/config/
 plugin/bots/
 plugin/plugins/
 plugin/data/
+plugin/logs/
 
 HELP.md
 .gradle
