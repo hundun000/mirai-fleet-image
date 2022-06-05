@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 
-public class ImageMD5HashUtil {
+public class MD5HashUtil {
     private final static String[] hexDigits = { "0", "1",
             "2","3", "4", "5", "6", "7",
             "8", "9", "a", "b", "c", "d", "e", "f" };
@@ -44,7 +44,7 @@ public class ImageMD5HashUtil {
     }
 
 
-    public static String MD5HashUtilMain(BufferedImage image, String formatName) {
+    public static String imageMD5(BufferedImage image, String formatName) {
         String resultString = "UNKNOWN_MD5";
         if (image == null) {
             return resultString;
@@ -53,7 +53,18 @@ public class ImageMD5HashUtil {
             MessageDigest md = MessageDigest.getInstance("MD5");
             resultString = byteArrayToHexString(md.digest(readFileStr(image)));
         } catch (Exception ex) {
+            
+        }
+        return resultString;
+    }
 
+    public static String stringMD5(String string) {
+        String resultString = "UNKNOWN_MD5";
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            resultString = byteArrayToHexString(md.digest(string.getBytes()));
+        } catch (Exception ex) {
+            
         }
         return resultString;
     }

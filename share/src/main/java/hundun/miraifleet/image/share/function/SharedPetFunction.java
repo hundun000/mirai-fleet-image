@@ -10,7 +10,9 @@ import java.security.MessageDigest;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 
-import hundun.miraifleet.image.share.util.ImageMD5HashUtil;
+import hundun.miraifleet.image.share.util.MD5HashUtil;
+import kotlin.Pair;
+
 import org.jetbrains.annotations.Nullable;
 
 import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
@@ -28,7 +30,9 @@ import net.mamoe.mirai.utils.ExternalResource;
 import xmmt.dituon.share.BasePetService;
 import xmmt.dituon.share.ConfigDTO;
 import xmmt.dituon.share.ImageSynthesis;
+import xmmt.dituon.share.TextData;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 /**
@@ -79,17 +83,24 @@ public class SharedPetFunction extends BaseFunction<Void> {
     
     @Nullable
     public File petService(BufferedImage from, BufferedImage to, String key) {
-        String cacheId = key + "--" + ImageMD5HashUtil.MD5HashUtilMain(from, IMAGE_FORMAT_FOR_GENERATE_CACHE_ID)
-                + "--" + ImageMD5HashUtil.MD5HashUtilMain(to, IMAGE_FORMAT_FOR_GENERATE_CACHE_ID);
+        return petService(from, to, key, null);
+    }
+    
+    
+    @Nullable
+    public File petService(BufferedImage from, BufferedImage to, String key, List<TextData> additionTextDatas) {
+        String cacheId = key + "--" + MD5HashUtil.imageMD5(from, IMAGE_FORMAT_FOR_GENERATE_CACHE_ID)
+                + "--" + MD5HashUtil.imageMD5(to, IMAGE_FORMAT_FOR_GENERATE_CACHE_ID)
+                + (additionTextDatas != null ? ("--" + MD5HashUtil.stringMD5(additionTextDatas.toString())) : "");
         log.info("petService for cacheId = " + cacheId);
-        Function<String, InputStream> uncachedFileProvider = uslessCacheId -> calculatePetServiceImage(from, to, key);
+        Function<String, InputStream> uncachedFileProvider = uslessCacheId -> calculatePetServiceImage(from, to, key, additionTextDatas);
         File resultFile = petServiceCache.fromCacheOrProvider(cacheId, uncachedFileProvider);
         return resultFile;
     }
     
-    private InputStream calculatePetServiceImage(BufferedImage from, BufferedImage to, String key) {
-        var petServiceResult = petService.generateImage(from, to, key);
-        return petServiceResult;
+    private InputStream calculatePetServiceImage(BufferedImage from, BufferedImage to, String key, List<TextData> additionTextDatas) {
+        Pair<InputStream, String> petServiceResult = petService.generateImage(from, to, key, null, additionTextDatas);
+        return petServiceResult != null ? petServiceResult.getFirst() : null;
     }
 
     public BufferedImage userAvatarOrDefaultAvatar(CommandSender sender) {

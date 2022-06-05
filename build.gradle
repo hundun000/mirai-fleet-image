@@ -101,7 +101,7 @@ project(":share") {
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
         //compileOnly("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
 
-        api 'com.github.Dituon:petpet:8b914aa487'
+        api 'com.github.Dituon:petpet:5ea56ac8db'
     }
     
     publishing {
