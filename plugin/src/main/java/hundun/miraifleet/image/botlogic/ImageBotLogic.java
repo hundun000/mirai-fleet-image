@@ -12,24 +12,21 @@ import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
  */
 public class ImageBotLogic extends BaseJavaBotLogic {
 
-    ImageExperimentalFunction imageExperimentalFunction;
-    ImageStableFunction imageStableFunction;
-    SharedPetFunction sharedPetFunction;
 
     public ImageBotLogic(JavaPlugin plugin) {
         super(plugin, "画图");
 
-        sharedPetFunction = new SharedPetFunction(this, plugin, characterName);
+        var sharedPetFunction = new SharedPetFunction(this, plugin, characterName);
 
-        imageExperimentalFunction = new ImageExperimentalFunction(this, plugin, characterName);
+        var imageExperimentalFunction = new ImageExperimentalFunction(this, plugin, characterName);
         imageExperimentalFunction.setSkipRegisterCommand(false);
         imageExperimentalFunction.lazyInitSharedFunction(sharedPetFunction);
-        functions.add(imageExperimentalFunction);
+        registerFunction(imageExperimentalFunction);
 
-        imageStableFunction = new ImageStableFunction(this, plugin, characterName);
+        var imageStableFunction = new ImageStableFunction(this, plugin, characterName);
         imageStableFunction.setSkipRegisterCommand(false);
         imageStableFunction.lazyInitSharedFunction(sharedPetFunction);
-        functions.add(imageStableFunction);
+        registerFunction(imageStableFunction);
     }
     
 }

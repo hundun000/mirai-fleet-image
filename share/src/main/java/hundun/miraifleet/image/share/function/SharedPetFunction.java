@@ -18,8 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
 import hundun.miraifleet.framework.core.function.BaseFunction;
 import hundun.miraifleet.framework.core.function.FunctionReplyReceiver;
-import hundun.miraifleet.framework.core.helper.file.CacheableFileHelper;
-import hundun.miraifleet.framework.core.helper.repository.SingletonDocumentRepository;
+import hundun.miraifleet.framework.helper.file.CacheableFileHelper;
+import hundun.miraifleet.framework.helper.repository.SingletonDocumentRepository;
 import lombok.Getter;
 import net.mamoe.mirai.console.command.AbstractCommand;
 import net.mamoe.mirai.console.command.CommandSender;
@@ -27,8 +27,9 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPlugin;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.utils.ExternalResource;
+import xmmt.dituon.share.AvatarExtraData;
 import xmmt.dituon.share.BasePetService;
-import xmmt.dituon.share.ConfigDTO;
+import xmmt.dituon.share.BaseServiceConfig;
 import xmmt.dituon.share.ImageSynthesis;
 import xmmt.dituon.share.TextData;
 
@@ -44,7 +45,7 @@ public class SharedPetFunction extends BaseFunction<Void> {
     private final CacheableFileHelper petServiceCache;
     @Getter
     private BufferedImage defaultPetServiceFrom;
-    private final SingletonDocumentRepository<ConfigDTO> petServiceConfigRepository;
+    private final SingletonDocumentRepository<BaseServiceConfig> petServiceConfigRepository;
     private BasePetService petService = new BasePetService();
     
     public SharedPetFunction(
@@ -60,19 +61,20 @@ public class SharedPetFunction extends BaseFunction<Void> {
                 null
                 );
         this.petServiceCache = new CacheableFileHelper(resolveFunctionCacheFileFolder(), "petService", plugin.getLogger());
-        this.petServiceConfigRepository = new SingletonDocumentRepository<ConfigDTO>(
+        this.petServiceConfigRepository = new SingletonDocumentRepository<BaseServiceConfig>(
                 plugin,
-                resolveFunctionRepositoryFile("petServiceConfigRepository.json"),
-                ConfigDTO.class,
-                () -> Map.of(SingletonDocumentRepository.THE_SINGLETON_KEY, new ConfigDTO())
+                resolveConfigRepositoryFile("petServiceConfigRepository.json"),
+                BaseServiceConfig.class,
+                () -> new BaseServiceConfig()
                 );
         try {
             defaultPetServiceFrom = ImageIO.read(resolveFunctionDataFile("petService/defaultAvatar.png"));
         } catch (IOException e) {
             plugin.getLogger().error("init error:", e);
         }
-        petService.readConfig(petServiceConfigRepository.findSingleton());
+        petService.readBaseServiceConfig(petServiceConfigRepository.findSingleton());
         petService.readData(resolveFunctionDataFile("petService/templates"));
+        
     }
 
 
@@ -99,7 +101,14 @@ public class SharedPetFunction extends BaseFunction<Void> {
     }
     
     private InputStream calculatePetServiceImage(BufferedImage from, BufferedImage to, String key, List<TextData> additionTextDatas) {
-        Pair<InputStream, String> petServiceResult = petService.generateImage(from, to, key, null, additionTextDatas);
+        AvatarExtraData avatarExtraData = new AvatarExtraData(
+                from, 
+                to, 
+                null,
+                null
+                );
+        
+        Pair<InputStream, String> petServiceResult = petService.generateImage(key, avatarExtraData, null, additionTextDatas);
         return petServiceResult != null ? petServiceResult.getFirst() : null;
     }
 
