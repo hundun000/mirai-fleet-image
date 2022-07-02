@@ -58,7 +58,7 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
                 "ImageExperimentalFunction",
                 () -> new SessionData()
             );
-        this.commandComponent = new CompositeCommandFunctionComponent(plugin, characterName, functionName);
+        this.commandComponent = new CompositeCommandFunctionComponent();
     }
 
     public void lazyInitSharedFunction(SharedPetFunction petFunction) {
@@ -108,8 +108,8 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
     }
 
     public class CompositeCommandFunctionComponent extends AbstractCompositeCommandFunctionComponent {
-        public CompositeCommandFunctionComponent(JvmPlugin plugin, String characterName, String functionName) {
-            super(plugin, characterName, functionName, functionName);
+        public CompositeCommandFunctionComponent() {
+            super(plugin, botLogic.getUserCommandRootPermission(), characterName, functionName, functionName);
         }
 
         @SubCommand("画图")

@@ -16,6 +16,11 @@ public class ImageBotLogic extends BaseJavaBotLogic {
     public ImageBotLogic(JavaPlugin plugin) {
         super(plugin, "画图");
 
+        
+    }
+
+    @Override
+    protected void onFunctionsEnable() {
         var sharedPetFunction = new SharedPetFunction(this, plugin, characterName);
 
         var imageExperimentalFunction = new ImageExperimentalFunction(this, plugin, characterName);

@@ -89,7 +89,7 @@ public class ImageStableFunction extends BaseFunction<Void>{
 
     public class CompositeCommandFunctionComponent extends AbstractCompositeCommandFunctionComponent {
         public CompositeCommandFunctionComponent(JvmPlugin plugin, String characterName, String functionName) {
-            super(plugin, characterName, functionName, functionName);
+            super(plugin, botLogic.getUserCommandRootPermission(), characterName, functionName, functionName);
         }
 
         @SubCommand("ConsoleTest画图")
