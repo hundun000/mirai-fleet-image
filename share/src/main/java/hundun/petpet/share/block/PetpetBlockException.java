@@ -1,6 +1,8 @@
 package hundun.petpet.share.block;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import hundun.petpet.share.block.PetpetBlock.ImageMeta;
+import hundun.petpet.share.block.dto.ImageProviderType;
 import hundun.petpet.share.block.provider.SimpleGeometricImageProvider;
 
 import java.io.IOException;
@@ -28,5 +30,9 @@ public class PetpetBlockException extends Exception {
 
     public static PetpetBlockException fromImageProvider(SimpleGeometricImageProvider provider, String key) {
         return new PetpetBlockException(String.format("ImageProvider %s 处理key=“%s”时，无法处理", provider.getClass().getName(), key));
+    }
+
+    public static PetpetBlockException fromJsonException(JsonProcessingException e) {
+        return new PetpetBlockException(String.format("PetpetBlock执行期间发生JsonException：%s", e.getMessage()));
     }
 }

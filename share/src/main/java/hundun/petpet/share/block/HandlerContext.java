@@ -1,5 +1,6 @@
 package hundun.petpet.share.block;
 
+import hundun.petpet.share.block.dto.ImageProviderType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

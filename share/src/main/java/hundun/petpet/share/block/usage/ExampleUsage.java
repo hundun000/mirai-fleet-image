@@ -1,6 +1,9 @@
 package hundun.petpet.share.block.usage;
 
 import hundun.petpet.share.block.*;
+import hundun.petpet.share.block.dto.ImageProviderType;
+import hundun.petpet.share.block.dto.JPetpetData;
+import hundun.petpet.share.block.dto.JPetpetData.PetpetBlockDTO;
 import kotlin.Pair;
 import hundun.petpet.share.block.provider.FileBaseImageProvider;
 import hundun.petpet.share.block.provider.IImageProvider;
@@ -22,7 +25,7 @@ public class ExampleUsage {
         String imageInputFolderPath = folder;
         String imageOutputFilePathAndNameStart = folder + "/output.";
 
-        PetpetBlockDTO dto = PetpetBlockDataKt.decodePetpetBlockDTO(getFileStr(new File(blockPath)));
+        PetpetBlockDTO dto = JPetpetData.decodePetpetBlockDTO(getFileStr(new File(blockPath)));
         PetpetBlock petpetBlock = PetpetBlockFactory.buildPetpetBlockFromDTO(dto);
 
         Map<ImageProviderType, IImageProvider> imageProviderMap = new HashMap<>();

@@ -1,6 +1,7 @@
 package hundun.petpet.share.block;
 
 
+import hundun.petpet.share.block.dto.ImageProviderType;
 import kotlin.Pair;
 import xmmt.dituon.share.GifBuilder;
 import xmmt.dituon.share.ImageDeformer;

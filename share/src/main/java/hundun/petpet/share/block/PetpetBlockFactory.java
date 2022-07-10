@@ -1,6 +1,7 @@
 package hundun.petpet.share.block;
 
 import hundun.petpet.share.block.PetpetBlock.*;
+import hundun.petpet.share.block.dto.JPetpetData.*;
 
 import java.awt.*;
 import java.util.List;
