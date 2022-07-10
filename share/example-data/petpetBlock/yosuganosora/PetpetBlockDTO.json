@@ -1,0 +1,101 @@
+{
+  "type": "IMG",
+  "initTask": {
+    "type": "CONTEXT_INIT",
+    "providerType": "FILE_BASE_IMAGE_PROVIDER",
+    "providerKey": "0.png",
+    "width": 325,
+    "height": 110,
+    "backgroundConfig": {
+      "transparent": false
+    }
+  },
+  "frameTasks": [{
+    "tasks": [{
+      "type":"CONTEXT_MODIFY",
+      "antialias":true,
+      "colorHex":"#FFFFFF",
+      "fontName": "黑体",
+      "fontSize": 35
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "SIMPLE_GEOMETRIC_IMAGE_PROVIDER",
+        "providerKey": "矩形 50,50 上下渐变,3,74,144,255,10,151,223,255",
+        "pos": {
+          "x": 25,
+          "y": 25
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "SIMPLE_GEOMETRIC_IMAGE_PROVIDER",
+        "providerKey": "矩形 50,50 上下渐变,3,74,144,255,10,151,223,255",
+        "pos": {
+          "x": 100,
+          "y": 25
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "SIMPLE_GEOMETRIC_IMAGE_PROVIDER",
+        "providerKey": "矩形 50,50 上下渐变,3,74,144,255,10,151,223,255",
+        "pos": {
+          "x": 175,
+          "y": 25
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "SIMPLE_GEOMETRIC_IMAGE_PROVIDER",
+        "providerKey": "矩形 50,50 上下渐变,3,74,144,255,10,151,223,255",
+        "pos": {
+          "x": 250,
+          "y": 25
+        }
+      }
+    }, {
+      "type": "DRAW_TEXT",
+      "text": "你",
+      "pos": {
+        "x": 30,
+        "y": 60
+      }
+    }, {
+      "type": "DRAW_TEXT",
+      "text": "好",
+      "pos": {
+        "x": 105,
+        "y": 60
+      }
+    }, {
+      "type": "DRAW_TEXT",
+      "text": "世",
+      "pos": {
+        "x": 180,
+        "y": 60
+      }
+    }, {
+      "type": "DRAW_TEXT",
+      "text": "界",
+      "pos": {
+        "x": 255,
+        "y": 60
+      }
+    }, {
+      "type":"CONTEXT_MODIFY",
+      "colorHex":"#034a90",
+      "fontSize": 16
+    }, {
+      "type": "DRAW_TEXT",
+      "text": "H e l l o   w o r l d",
+      "pos": {
+        "x": 80,
+        "y": 100
+      }
+    }]
+  }]
+}

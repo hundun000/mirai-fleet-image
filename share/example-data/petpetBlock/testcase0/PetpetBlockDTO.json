@@ -1,0 +1,85 @@
+{
+  "type": "IMG",
+  "initTask": {
+    "type": "CONTEXT_INIT",
+    "providerType": "FILE_BASE_IMAGE_PROVIDER",
+    "providerKey": "0.png",
+    "width": 100,
+    "height": 100,
+    "backgroundConfig": {
+      "transparent": false
+    }
+  },
+  "frameTasks": [{
+    "tasks": [{
+      "type":"CONTEXT_MODIFY",
+      "antialias":true,
+      "colorHex":"#000000",
+      "fontName": "黑体",
+      "fontSize": 16
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "0.png",
+        "pos": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "imageModify": {
+        "round": true,
+        "angle": 0
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "0.png",
+        "pos": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      "imageModify": {
+        "round": true,
+        "angle": 60
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "0.png",
+        "pos": {
+          "x": 0,
+          "y": 50
+        }
+      },
+      "imageModify": {
+        "round": false,
+        "angle": 30
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "SIMPLE_GEOMETRIC_IMAGE_PROVIDER",
+        "providerKey": "矩形 30,30 上下渐变,255,0,0,255,0,255,0,0",
+        "pos": {
+          "x": 50,
+          "y": 50
+        }
+      },
+      "imageModify": {
+        "round": false,
+        "angle": 60
+      }
+    }, {
+        "type": "DRAW_TEXT",
+        "text": "你好世界",
+        "pos": {
+          "x": 0,
+          "y": 50
+        }
+      }]
+  }]
+}

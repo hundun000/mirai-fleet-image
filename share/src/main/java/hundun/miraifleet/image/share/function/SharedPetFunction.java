@@ -25,13 +25,7 @@ import net.mamoe.mirai.console.command.AbstractCommand;
 import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.plugin.jvm.JvmPlugin;
 import net.mamoe.mirai.event.events.NudgeEvent;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.utils.ExternalResource;
-import xmmt.dituon.share.AvatarExtraData;
-import xmmt.dituon.share.BasePetService;
-import xmmt.dituon.share.BaseServiceConfig;
-import xmmt.dituon.share.ImageSynthesis;
-import xmmt.dituon.share.TextData;
+import xmmt.dituon.share.*;
 
 import java.util.List;
 import java.util.Map;
@@ -101,9 +95,9 @@ public class SharedPetFunction extends BaseFunction<Void> {
     }
     
     private InputStream calculatePetServiceImage(BufferedImage from, BufferedImage to, String key, List<TextData> additionTextDatas) {
-        AvatarExtraData avatarExtraData = new AvatarExtraData(
-                from, 
-                to, 
+        AvatarExtraDataProvider avatarExtraData = new AvatarExtraDataProvider(
+                () -> from,
+                () -> to,
                 null,
                 null
                 );

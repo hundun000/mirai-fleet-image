@@ -87,14 +87,14 @@ project(":share") {
 
     dependencies {
 
-        api 'com.github.hundun000.mirai-fleet-framework:framework-starter:0.6.0b'
+        api 'com.github.hundun000.mirai-fleet-framework:framework-starter:0.6.0c'
 
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVer")
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVer")
         //implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVer")
         //compileOnly("com.github.LaoLittle:SkikoMirai:$SkikoMiraiVer")
 
-        api 'com.github.Dituon:petpet:3.1-M1'
+        api 'com.github.Dituon:petpet:50a7870750'
     }
     
     publishing {

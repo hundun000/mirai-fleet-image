@@ -4,6 +4,8 @@ plugin/plugins/
 plugin/data/
 plugin/logs/
 
+share/example-data/**/output.png
+
 HELP.md
 .gradle
 build/
