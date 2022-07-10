@@ -8,9 +8,16 @@
 
 ### 子项目share.block
 
-输出样例：
+#### 输出样例
+
+- 圆形裁剪、旋转
 
 ![image](docs/testcase0-output.png)
 
+- 矩形涂色、文字
+
 ![image](docs/yosuganosora-output.png)
 
+- 随机选择图片并组合
+
+![image](docs/steinsgate-output.png)

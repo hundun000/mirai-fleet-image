@@ -1,0 +1,99 @@
+{
+  "type": "IMG",
+  "initTask": {
+    "type": "CONTEXT_INIT",
+    "providerType": "FILE_BASE_IMAGE_PROVIDER",
+    "providerKey": "0.png",
+    "width": 880,
+    "height": 300,
+    "backgroundConfig": {
+      "transparent": false
+    }
+  },
+  "frameTasks": [{
+    "tasks": [{
+      "type":"CONTEXT_MODIFY",
+      "antialias":true
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|0.png|0.png|1.png|2.png",
+        "pos": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "dot.png",
+        "pos": {
+          "x": 110,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|1.png|2.png|3.png|4.png|5.png|6.png|7.png|8.png|9.png",
+        "pos": {
+          "x": 220,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|1.png|2.png|3.png|4.png|5.png|6.png|7.png|8.png|9.png",
+        "pos": {
+          "x": 330,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|1.png|2.png|3.png|4.png|5.png|6.png|7.png|8.png|9.png",
+        "pos": {
+          "x": 440,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|1.png|2.png|3.png|4.png|5.png|6.png|7.png|8.png|9.png",
+        "pos": {
+          "x": 550,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|1.png|2.png|3.png|4.png|5.png|6.png|7.png|8.png|9.png",
+        "pos": {
+          "x": 660,
+          "y": 0
+        }
+      }
+    }, {
+      "type": "DRAW_IMAGE",
+      "imageMetaDTO": {
+        "providerType": "FILE_BASE_IMAGE_PROVIDER",
+        "providerKey": "RANDOM:0.png|1.png|2.png|3.png|4.png|5.png|6.png|7.png|8.png|9.png",
+        "pos": {
+          "x": 770,
+          "y": 0
+        }
+      }
+    }]
+  }]
+}

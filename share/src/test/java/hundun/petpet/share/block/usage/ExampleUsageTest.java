@@ -17,4 +17,9 @@ public class ExampleUsageTest {
     public void test_yosuganosora() throws PetpetBlockException, IOException {
         exampleUsage.work("./example-data/petpetBlock/yosuganosora");
     }
+
+    @Test
+    public void test_steinsgate() throws PetpetBlockException, IOException {
+        exampleUsage.work("./example-data/petpetBlock/steinsgate");
+    }
 }
