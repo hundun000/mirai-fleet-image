@@ -29,11 +29,11 @@ public class SimpleGeometricImageProvider implements IImageProvider {
                             Integer.parseInt(colorParts[7]),
                             Integer.parseInt(colorParts[8]));
                     if (colorType.equals("上下渐变")) {
-                        paint = new GradientPaint((int)(width / 2), 0, colorFrom, (int)(width / 2), height, colorTo);
+                        paint = new GradientPaint(width / 2, 0, colorFrom, width / 2, height, colorTo);
                     } else if (colorType.equals("左右渐变")) {
-                        paint = new GradientPaint(0, (int)(height / 2), colorFrom, width, (int)(height / 2), colorTo);
+                        paint = new GradientPaint(0, height / 2, colorFrom, width, height / 2, colorTo);
                     } else {
-                        paint = new GradientPaint((int)(width / 2), 0, colorFrom, (int)(width / 2), height, colorTo);
+                        paint = new GradientPaint(width / 2, 0, colorFrom, width / 2, height, colorTo);
                     }
                 } else {
                     paint = new Color(Integer.parseInt(colorParts[0]),

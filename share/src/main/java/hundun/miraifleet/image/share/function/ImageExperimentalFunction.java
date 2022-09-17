@@ -1,14 +1,14 @@
 package hundun.miraifleet.image.share.function;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
 import java.util.TimerTask;
-import java.util.function.Function;
 
 import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
 import hundun.miraifleet.framework.core.function.AsListenerHost;
 import hundun.miraifleet.framework.core.function.BaseFunction;
 import hundun.miraifleet.framework.core.function.FunctionReplyReceiver;
+import hundun.miraifleet.framework.core.function.SessionDataMap;
+import hundun.miraifleet.framework.core.function.SessionDataMap.GroupMessageToSessionIdType;
 import lombok.Data;
 import lombok.Getter;
 import net.mamoe.mirai.console.command.AbstractCommand;
@@ -21,16 +21,17 @@ import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.utils.ExternalResource;
 import org.jetbrains.annotations.NotNull;
-import xmmt.dituon.share.ImageSynthesis;
+import xmmt.dituon.share.ImageSynthesisCore;
 
 @AsListenerHost
-public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFunction.SessionData>{
+public class ImageExperimentalFunction extends BaseFunction {
 
     @Getter
     private final CompositeCommandFunctionComponent commandComponent;
     private final int BW_TIMEOUT_SECOND = 30;
     private SharedPetFunction petFunction;
-
+    private final SessionDataMap<ImageExperimentalFunction.SessionData> sessionDataMap;
+    
     private enum ImageFunctionState {
         INIT,
         WAIT_BW_IMAGE,
@@ -55,9 +56,11 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
                 baseBotLogic,
                 plugin,
                 characterName,
-                "ImageExperimentalFunction",
-                () -> new SessionData()
+                "ImageExperimentalFunction"
             );
+        this.sessionDataMap = new SessionDataMap<>(
+                GroupMessageToSessionIdType.USE_GROUP_ID, 
+                () -> new SessionData());
         this.commandComponent = new CompositeCommandFunctionComponent();
     }
 
@@ -70,7 +73,7 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
         if (!checkCosPermission(event)) {
             return;
         }
-        var sessionData = getOrCreateSessionData(event);
+        var sessionData = sessionDataMap.getOrCreateSessionData(event);
         if (sessionData.getState() == ImageFunctionState.INIT) {
             return;
         }
@@ -86,7 +89,7 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
                 var resultFile = petFunction.petService(sessionData.getFromAvatarImage(), sessionData.toAvatarImage, sessionData.getPetpetKey());
                 if (resultFile != null) {
                     ExternalResource externalResource = ExternalResource.create(resultFile).toAutoCloseable();
-                    Message message = receiver.uploadImageOrNotSupportPlaceholder(externalResource);
+                    Message message = receiver.uploadImageAndCloseOrNotSupportPlaceholder(externalResource);
                     receiver.sendMessage(message);
                 } else {
                     log.info("petService resultFile null");
@@ -109,7 +112,7 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
 
     public class CompositeCommandFunctionComponent extends AbstractCompositeCommandFunctionComponent {
         public CompositeCommandFunctionComponent() {
-            super(plugin, botLogic.getUserCommandRootPermission(), characterName, functionName, functionName);
+            super(plugin, botLogic, new UserLevelFunctionComponentConstructPack(characterName, functionName));
         }
 
         @SubCommand("画图")
@@ -117,14 +120,15 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
             if (!checkCosPermission(sender)) {
                 return;
             }
-            String sessionId = getSessionId(sender);
-            var sessionData = getOrCreateSessionData(sessionId);
+
+            var sessionId = sessionDataMap.getSessionId(sender);
+            var sessionData = sessionDataMap.getOrCreateSessionData(sessionId);
             FunctionReplyReceiver receiver = new FunctionReplyReceiver(sender, plugin.getLogger());
             if (sessionData.getState() == ImageFunctionState.INIT) {
                 sessionData.setState(ImageFunctionState.WAIT_BW_IMAGE);
                 sessionData.setPetpetKey(petpetKey);
-                BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(sender.getUser().getAvatarUrl());
-                BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(target.getAvatarUrl());
+                BufferedImage fromAvatarImage = ImageSynthesisCore.getAvatarImage(sender.getUser().getAvatarUrl());
+                BufferedImage toAvatarImage = ImageSynthesisCore.getAvatarImage(target.getAvatarUrl());
                 sessionData.setFromAvatarImage(fromAvatarImage);
                 sessionData.setToAvatarImage(toAvatarImage);
                 receiver.sendMessage("进入等待petpet图片状态，请在" + BW_TIMEOUT_SECOND + "秒内发送图片");
@@ -143,10 +147,11 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
             }
             @Override
             public void run() {
-                SessionData sessionData = getOrCreateSessionData(sessionId);
+                SessionData sessionData = sessionDataMap.getOrCreateSessionData(sessionId);
                 if (sessionData.state == ImageFunctionState.WAIT_BW_IMAGE) {
                     receiver.sendMessage("已超时，离开等待图片状态。");
-                    removeSessionData(sessionId);
+                    // FIXME wait removeSessionData change to public
+                    // sessionDataMap.removeSessionData(sessionId);
                 } else {
                     plugin.getLogger().warning("id = " + sessionId + " state = " + sessionData.state + " but TimeoutTask arrival");
                 }
@@ -155,7 +160,7 @@ public class ImageExperimentalFunction extends BaseFunction<ImageExperimentalFun
 
         @SubCommand("假装自己是图片")
         public void fakeImage(CommandSender sender) {
-            var sessionData = getOrCreateSessionData(sender);
+            var sessionData = sessionDataMap.getOrCreateSessionData(sender);
             FunctionReplyReceiver receiver = new FunctionReplyReceiver(sender, plugin.getLogger());
             if (sessionData.getState() == ImageFunctionState.WAIT_BW_IMAGE) {
                 receiver.sendMessage("已处理假装收到图片，离开等待图片状态");

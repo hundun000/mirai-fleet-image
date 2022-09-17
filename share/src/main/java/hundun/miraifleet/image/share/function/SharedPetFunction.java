@@ -1,15 +1,10 @@
 package hundun.miraifleet.image.share.function;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
-
 import hundun.miraifleet.image.share.util.MD5HashUtil;
 import kotlin.Pair;
 
@@ -17,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 
 import hundun.miraifleet.framework.core.botlogic.BaseBotLogic;
 import hundun.miraifleet.framework.core.function.BaseFunction;
-import hundun.miraifleet.framework.core.function.FunctionReplyReceiver;
 import hundun.miraifleet.framework.helper.file.CacheableFileHelper;
 import hundun.miraifleet.framework.helper.repository.SingletonDocumentRepository;
 import lombok.Getter;
@@ -28,13 +22,12 @@ import net.mamoe.mirai.event.events.NudgeEvent;
 import xmmt.dituon.share.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 /**
  * @author hundun
  * Created on 2022/06/02
  */
-public class SharedPetFunction extends BaseFunction<Void> {
+public class SharedPetFunction extends BaseFunction {
     
     private final CacheableFileHelper petServiceCache;
     @Getter
@@ -51,8 +44,7 @@ public class SharedPetFunction extends BaseFunction<Void> {
                 baseBotLogic,
                 plugin,
                 characterName,
-                "SharedPetFunction",
-                null
+                "SharedPetFunction"
                 );
         this.petServiceCache = new CacheableFileHelper(resolveFunctionCacheFileFolder(), "petService", plugin.getLogger());
         this.petServiceConfigRepository = new SingletonDocumentRepository<BaseServiceConfig>(
@@ -107,11 +99,11 @@ public class SharedPetFunction extends BaseFunction<Void> {
     }
 
     public BufferedImage userAvatarOrDefaultAvatar(CommandSender sender) {
-        return sender.getUser() != null ? ImageSynthesis.getAvatarImage(sender.getUser().getAvatarUrl()) : this.getDefaultPetServiceFrom();
+        return sender.getUser() != null ? ImageSynthesisCore.getAvatarImage(sender.getUser().getAvatarUrl()) : this.getDefaultPetServiceFrom();
     }
 
     public BufferedImage userAvatarOrDefaultAvatar(NudgeEvent event) {
-        return ImageSynthesis.getAvatarImage(event.getFrom().getAvatarUrl());
+        return ImageSynthesisCore.getAvatarImage(event.getFrom().getAvatarUrl());
     }
 
     @Override

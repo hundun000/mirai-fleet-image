@@ -8,6 +8,9 @@ import hundun.petpet.share.block.provider.SimpleGeometricImageProvider;
 import java.io.IOException;
 
 public class PetpetBlockException extends Exception {
+
+    private static final long serialVersionUID = 7086443849195935476L;
+
     public PetpetBlockException (String msg) {
         super(msg);
     }

@@ -5,7 +5,7 @@ import hundun.petpet.share.block.dto.ImageProviderType;
 import kotlin.Pair;
 import xmmt.dituon.share.GifBuilder;
 import xmmt.dituon.share.ImageDeformer;
-import xmmt.dituon.share.ImageSynthesis;
+import xmmt.dituon.share.ImageSynthesisCore;
 import xmmt.dituon.share.Type;
 import hundun.petpet.share.block.PetpetBlock.*;
 import hundun.petpet.share.block.provider.IImageProvider;
@@ -39,7 +39,7 @@ public class PetpetBlockHandler {
             if (imageModify != null) {
                 if (imageModify.getRound() != null && imageModify.getRound()) {
                     try {
-                        image = ImageSynthesis.convertCircular(image, blockContext.isAntialias());
+                        image = ImageSynthesisCore.convertCircular(image, blockContext.isAntialias());
                     } catch (IOException e) {
                         e.printStackTrace();
                         throw PetpetBlockException.fromIOException(e);
@@ -63,7 +63,7 @@ public class PetpetBlockHandler {
             anchorAndWH[1] = task.getImageMeta().getAnchorPos()[1];
             anchorAndWH[2] = image.getWidth();
             anchorAndWH[3] = image.getHeight();
-            ImageSynthesis.g2dDrawZoomAvatar(g2d, image, anchorAndWH, angle, blockContext.isAntialias());
+            ImageSynthesisCore.g2dDrawZoomAvatar(g2d, image, anchorAndWH, angle, blockContext.isAntialias());
         }
 
     }
@@ -84,7 +84,7 @@ public class PetpetBlockHandler {
 
         @Override
         public void apply(HandlerContext handlerContext, Graphics2D g2d, PetpetBlockContext blockContext, DrawTextTask task) {
-            ImageSynthesis.g2dDrawText(g2d, task.getText(), task.getAnchorPos(), blockContext.getColor(), blockContext.getFont());
+            ImageSynthesisCore.g2dDrawText(g2d, task.getText(), task.getAnchorPos(), blockContext.getColor(), blockContext.getFont());
         }
     }
 
